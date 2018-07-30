@@ -1,9 +1,9 @@
 package meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding
 
 import android.widget.TextView
+import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.ui.activities.base.binding.BaseBinding
 import meugeninua.citiesnavigator.ui.activities.base.binding.Binding
-import meugeninua.citiesnavigator.R;
 
 /**
  * @author meugen
