@@ -1,7 +1,8 @@
-package meugeninua.citiesnavigator
+package meugeninua.citiesnavigator.ui.activities.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import meugeninua.citiesnavigator.R
 
 class MainActivity : AppCompatActivity() {
 
