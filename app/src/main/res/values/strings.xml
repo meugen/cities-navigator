@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CitiesNavigator</string>
+    <string name="message_error">Get results error</string>
 </resources>

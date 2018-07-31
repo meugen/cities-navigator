@@ -7,6 +7,8 @@ import meugeninua.citiesnavigator.model.readEntity
 /**
  * @author meugen
  */
+const val COUNTRY_ENTITY = "country_entity"
+
 class CountryEntity(val map: MutableMap<String, Any>) {
 
     var name: String by map
@@ -25,8 +27,6 @@ class CountryEntity(val map: MutableMap<String, Any>) {
         this.states = states
     }
 }
-
-const val COUNTRY_READER = "country_reader"
 
 class CountryReader: EntityReader<CountryEntity> {
 
