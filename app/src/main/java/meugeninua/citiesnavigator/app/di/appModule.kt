@@ -34,7 +34,7 @@ val appModule: Module = applicationContext {
 
 private const val CACHE_SIZE = 20L * 1024L * 1024L // 20MB
 private fun buildCache(context: Context): Cache {
-    return Cache(context.filesDir, CACHE_SIZE)
+    return Cache(context.cacheDir, CACHE_SIZE)
 }
 
 private fun buildOkHttp(cache: Cache): OkHttpClient {
