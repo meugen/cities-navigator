@@ -35,6 +35,9 @@ dependencies {
     implementation "${packages.lifecycle}:extensions:${versions.lifecycle}"
     implementation "org.koin:koin-android-architecture:0.9.3"
 
+    implementation "${packages.okhttp}:okhttp:${versions.okhttp}"
+    implementation "${packages.okhttp}:logging-interceptor:${versions.okhttp}"
+
     implementation "${packages.support}:appcompat-v7:${versions.support}"
     implementation "${packages.support}:recyclerview-v7:${versions.support}"
 

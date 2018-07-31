@@ -35,19 +35,17 @@ class MainFragment: BindingFragment<MainBinding>() {
         binding.setupRecycler()
 
         model.liveData.observe(this, Observer { onCities(it) })
-        model.loadCities()
+        model.loadCities(true)
     }
 
     private fun onCities(resource: Resource<List<CityEntity>>?) {
         resource?.let {
             if (it.isLoading) {
                 binding.displayProgressBar()
-            } else {
-                try {
-                    binding.displayCities(it.data)
-                } catch (e: Throwable) {
-                    binding.displayError(e)
-                }
+            } else try {
+                binding.displayCities(it.data)
+            } catch (e: Throwable) {
+                binding.displayError(e)
             }
         }
     }
