@@ -6,10 +6,8 @@ import meugeninua.citiesnavigator.model.EntityReader
 import meugeninua.citiesnavigator.model.await
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.nextEntities
-import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.net.URL
 
 /**
  * @author meugen
