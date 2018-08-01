@@ -13,6 +13,8 @@ buildscript {
             lifecycle: '1.1.1',
             okhttp: '3.11.0',
             play_services: '15.0.1']
+    ext.props = new Properties()
+    file("props.properties").withInputStream { props.load(it) }
     repositories {
         google()
         jcenter()

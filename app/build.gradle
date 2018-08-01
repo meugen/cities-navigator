@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
-def props = new Properties()
-file("props.properties").withInputStream { props.load(it) }
-
 android {
     compileSdkVersion 28
     defaultConfig {
