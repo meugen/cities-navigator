@@ -21,9 +21,21 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.activities.map.MapActivity"
+            android:parentActivityName=".ui.activities.main.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.main.MainActivity"/>
+        </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2f28dc715ce8501fb3e4703dc5452eb73805963a" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAESliC2hQwRphWhmrz5KcHsZeiJTos104"/>
     </application>
 
 </manifest>

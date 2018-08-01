@@ -6,4 +6,7 @@
     android:textAppearance="?android:attr/textAppearanceListItem"
     android:id="@+id/name"
     android:padding="@dimen/default_padding"
-    android:gravity="center_vertical"/>
+    android:gravity="center_vertical"
+    android:drawableEnd="@drawable/baseline_navigate_next_black_24"
+    android:drawablePadding="@dimen/default_padding"
+    android:background="?android:attr/selectableItemBackground"/>

@@ -9,15 +9,17 @@ import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.ui.activities.base.fragments.BindingFragment
 import meugeninua.citiesnavigator.ui.activities.base.resource.Resource
+import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesAdapter
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding.MainBinding
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainViewModel
+import meugeninua.citiesnavigator.ui.activities.map.MapActivity
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
 /**
  * @author meugen
  */
-class MainFragment: BindingFragment<MainBinding>() {
+class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelectedListener {
 
     override val binding: MainBinding by inject()
     val model: MainViewModel by viewModel()
@@ -32,7 +34,7 @@ class MainFragment: BindingFragment<MainBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.setupRecycler()
+        binding.setupRecycler(this)
 
         model.liveData.observe(this, Observer { onCities(it) })
         model.loadCities(true)
@@ -48,5 +50,13 @@ class MainFragment: BindingFragment<MainBinding>() {
                 binding.displayError(e)
             }
         }
+    }
+
+    override fun onCitySelected(entity: CityEntity) {
+        val context = this.context ?: return
+        MapActivity.Builder()
+                .withLat(entity.lat)
+                .withLng(entity.lng)
+                .start(context)
     }
 }

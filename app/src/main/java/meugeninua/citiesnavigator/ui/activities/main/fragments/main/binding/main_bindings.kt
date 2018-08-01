@@ -19,7 +19,7 @@ import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.Cit
  */
 interface MainBinding: Binding {
 
-    fun setupRecycler()
+    fun setupRecycler(listener: CitiesAdapter.OnCitySelectedListener)
 
     fun displayCities(cities: List<CityEntity>)
 
@@ -30,14 +30,15 @@ interface MainBinding: Binding {
 
 class MainBindingImpl(private val context: Context): BaseBinding(), MainBinding {
 
-    private val adapter by lazy { CitiesAdapter(LayoutInflater.from(context)) }
+    private lateinit var adapter: CitiesAdapter
 
-    override fun setupRecycler() {
+    override fun setupRecycler(listener: CitiesAdapter.OnCitySelectedListener) {
         val recycler: RecyclerView = get(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
-        recycler.adapter = this.adapter
+        adapter = CitiesAdapter(LayoutInflater.from(context), listener)
+        recycler.adapter = adapter
     }
 
     override fun displayCities(cities: List<CityEntity>) {
