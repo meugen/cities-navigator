@@ -57,6 +57,7 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
         MapActivity.Builder()
                 .withLat(entity.lat)
                 .withLng(entity.lng)
+                .withName(entity.name)
                 .start(context)
     }
 }

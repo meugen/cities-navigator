@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
+def props = new Properties()
+file("props.properties").withInputStream { props.load(it) }
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -14,6 +17,8 @@ android {
 
         buildConfigField 'String', 'CITIES_URL', '"https://raw.githubusercontent.com/meugen/cities-navigator/master/json/cities.json"'
         buildConfigField 'String', 'COUNTRIES_URL', '"https://raw.githubusercontent.com/meugen/cities-navigator/master/json/countries.json"'
+
+        resValue 'string', 'com_google_android_geo_api_key', props.get('com_google_android_geo_api_key')
     }
     buildTypes {
         release {
