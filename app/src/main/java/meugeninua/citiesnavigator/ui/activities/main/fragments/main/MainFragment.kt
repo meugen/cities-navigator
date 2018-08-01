@@ -52,6 +52,10 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
         }
     }
 
+    fun filterCities(text: CharSequence) {
+
+    }
+
     override fun onCitySelected(entity: CityEntity) {
         val context = this.context ?: return
         MapActivity.Builder()
