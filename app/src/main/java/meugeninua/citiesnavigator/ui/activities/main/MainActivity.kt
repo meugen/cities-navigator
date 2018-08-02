@@ -4,14 +4,21 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
+import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import meugeninua.citiesnavigator.R
+import meugeninua.citiesnavigator.app.services.FetchAllService
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.MainFragment
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+
+    private val dispatcher: FirebaseJobDispatcher by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        FetchAllService.Launcher().launch(dispatcher)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

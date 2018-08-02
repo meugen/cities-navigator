@@ -30,6 +30,14 @@
                 android:value=".ui.activities.main.MainActivity"/>
         </activity>
 
+        <service
+            android:name=".app.services.FetchAllService">
+
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2f28dc715ce8501fb3e4703dc5452eb73805963a" />
