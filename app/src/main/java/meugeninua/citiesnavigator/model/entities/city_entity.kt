@@ -2,6 +2,7 @@ package meugeninua.citiesnavigator.model.entities
 
 import android.util.JsonReader
 import meugeninua.citiesnavigator.model.EntityReader
+import meugeninua.citiesnavigator.model.delegates.NamedMapDelegate
 import meugeninua.citiesnavigator.model.readEntity
 
 /**
@@ -11,10 +12,11 @@ const val CITY_ENTITY = "city_entity"
 
 class CityEntity(val map: MutableMap<String, Any>) {
 
-    var country: String by map
-    var name: String by map
-    var lat: Double by map
-    var lng: Double by map
+    // Huge memory overhead +4 additional objects per EACH entity
+    var country: String by NamedMapDelegate(map)
+    var name: String by NamedMapDelegate(map)
+    var lat: Double by NamedMapDelegate(map)
+    var lng: Double by NamedMapDelegate(map)
 
     constructor(): this(mutableMapOf())
 

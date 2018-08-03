@@ -2,8 +2,8 @@ package meugeninua.citiesnavigator.app.services
 
 import android.os.Bundle
 import com.firebase.jobdispatcher.*
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
 import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.repositories.MainRepository
 import org.koin.android.ext.android.inject
@@ -17,20 +17,28 @@ class FetchAllService: JobService() {
     private val repository: MainRepository by inject()
     private val citiesDao: CitiesDao by inject()
 
-    private val deferreds = mutableMapOf<String, Deferred<*>>()
+    private val jobs = mutableMapOf<String, Deferred<*>>()
 
     override fun onStopJob(job: JobParameters?): Boolean {
         val tag = job?.tag ?: return false
-        val deferred = deferreds.remove(tag) ?: return false
-        deferred.cancel()
+        jobs.remove(tag)?.cancel()
         return true
     }
 
     override fun onStartJob(job: JobParameters?): Boolean {
         val tag = job?.tag ?: return false
+        Timber.d("Job is started")
 
-        deferreds[tag] = async { fetchAll() }
+        jobs[tag] = async(onCompletion = { onCompleted(job, it) }) { fetchAll() }
         return true
+    }
+
+    private fun onCompleted(job: JobParameters, e: Throwable?) {
+        jobs.remove(job.tag)
+        if (e != null) {
+            Timber.d(e)
+        }
+        jobFinished(job, e != null && e !is CancellationException)
     }
 
     private suspend fun fetchAll() {
@@ -56,7 +64,7 @@ class FetchAllService: JobService() {
                     .setService(FetchAllService::class.java)
                     .setTag("fetch-all-cities-and-countries")
                     .setTrigger(Trigger.NOW)
-                    .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                    .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                     .build()
             dispatcher.mustSchedule(job)
         }

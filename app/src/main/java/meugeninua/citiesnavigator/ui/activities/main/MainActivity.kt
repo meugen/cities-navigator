@@ -5,20 +5,34 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.app.services.FetchAllService
+import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.MainFragment
 import org.koin.android.ext.android.inject
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private val dispatcher: FirebaseJobDispatcher by inject()
+    private val citiesDao: CitiesDao by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         FetchAllService.Launcher().launch(dispatcher)
+        launch {
+            delay(20, TimeUnit.SECONDS)
+            val cities = citiesDao.cities()
+            Timber.d("Found %d cities", cities.size)
+            val countries = citiesDao.countries()
+            Timber.d("Found %d countries", countries.size)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
