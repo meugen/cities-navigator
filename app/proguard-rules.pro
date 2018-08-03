@@ -20,6 +20,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class android.support.v7.widget.SearchView { *; }
+
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
 
@@ -31,5 +33,13 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+#-keepresourcexmlelements manifest/application/meta-data@name=io.fabric.ApiKey
+
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
 -repackageclasses
