@@ -2,8 +2,9 @@ package meugeninua.citiesnavigator.app.services
 
 import android.os.Bundle
 import com.firebase.jobdispatcher.*
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.repositories.MainRepository
 import org.koin.android.ext.android.inject

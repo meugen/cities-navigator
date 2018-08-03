@@ -5,8 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.entities.CountryEntity
-import meugeninua.citiesnavigator.model.toContentValues
-import meugeninua.citiesnavigator.model.toMutableMap
+import meugeninua.citiesnavigator.model.entities.toContentValues
 
 /**
  * @author meugen
@@ -34,7 +33,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
         return db.select("SELECT * FROM cities") {
             val result = ArrayList<CityEntity>(it.count)
             while (it.moveToNext()) {
-                result.add(CityEntity(it.toMutableMap()))
+                result.add(CityEntity(it))
             }
             result
         }
@@ -44,7 +43,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
         return db.select("SELECT * FROM countries") {
             val result = ArrayList<CountryEntity>(it.count)
             while (it.moveToNext()) {
-                result.add(CountryEntity(it.toMutableMap()))
+                result.add(CountryEntity(it))
             }
             result
         }
@@ -53,7 +52,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
     override fun insertCities(cities: List<CityEntity>) {
         db.inTransaction {
             for (city in cities) {
-                val values = city.map.toContentValues()
+                val values = city.toContentValues()
                 insertOrThrow("cities",
                         null, values)
             }
@@ -63,7 +62,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
     override fun insertCountries(countries: List<CountryEntity>) {
         db.inTransaction {
             for (country in countries) {
-                val values = country.map.toContentValues()
+                val values = country.toContentValues()
                 insertWithOnConflict("countries",
                         null, values,
                         SQLiteDatabase.CONFLICT_REPLACE)

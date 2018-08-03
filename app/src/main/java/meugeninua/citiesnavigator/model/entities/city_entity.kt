@@ -1,8 +1,9 @@
 package meugeninua.citiesnavigator.model.entities
 
+import android.content.ContentValues
+import android.database.Cursor
 import android.util.JsonReader
 import meugeninua.citiesnavigator.model.EntityReader
-import meugeninua.citiesnavigator.model.delegates.NamedMapDelegate
 import meugeninua.citiesnavigator.model.readEntity
 
 /**
@@ -10,24 +11,33 @@ import meugeninua.citiesnavigator.model.readEntity
  */
 const val CITY_ENTITY = "city_entity"
 
-class CityEntity(val map: MutableMap<String, Any>) {
+private const val FLD_COUNTRY = "country"
+private const val FLD_NAME = "name"
+private const val FLD_LAT = "lat"
+private const val FLD_LNG = "lng"
 
-    // Huge memory overhead +4 additional objects per EACH entity
-    var country: String by NamedMapDelegate(map)
-    var name: String by NamedMapDelegate(map)
-    var lat: Double by NamedMapDelegate(map)
-    var lng: Double by NamedMapDelegate(map)
+class CityEntity(
+        var country: String,
+        var name: String,
+        var lat: Double,
+        var lng: Double) {
 
-    constructor(): this(mutableMapOf())
+    constructor(): this("", "", 0.0, 0.0)
 
-    constructor(
-            country: String, name: String,
-            lat: Double, lng: Double): this(mutableMapOf()) {
-        this.country = country
-        this.name = name
-        this.lat = lat
-        this.lng = lng
-    }
+    constructor(cursor: Cursor): this(
+            cursor.getString(FLD_COUNTRY),
+            cursor.getString(FLD_NAME),
+            cursor.getDouble(FLD_LAT),
+            cursor.getDouble(FLD_LNG))
+}
+
+fun CityEntity.toContentValues(): ContentValues {
+    val result = ContentValues()
+    result.put(FLD_COUNTRY, country)
+    result.put(FLD_NAME, name)
+    result.put(FLD_LAT, lat)
+    result.put(FLD_LNG, lng)
+    return result
 }
 
 class CityReader: EntityReader<CityEntity> {
@@ -35,9 +45,7 @@ class CityReader: EntityReader<CityEntity> {
     override fun nextEntity(reader: JsonReader): CityEntity {
         val entity = CityEntity()
         reader.readEntity {
-            name ->
-
-            when (name) {
+            when (it) {
                 "country" -> entity.country = nextString()
                 "name" -> entity.name = nextString()
                 "lat" -> entity.lat = nextDouble()

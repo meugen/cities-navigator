@@ -1,8 +1,9 @@
 package meugeninua.citiesnavigator.model.entities
 
+import android.content.ContentValues
+import android.database.Cursor
 import android.util.JsonReader
 import meugeninua.citiesnavigator.model.EntityReader
-import meugeninua.citiesnavigator.model.delegates.NamedMapDelegate
 import meugeninua.citiesnavigator.model.readEntity
 
 /**
@@ -10,24 +11,33 @@ import meugeninua.citiesnavigator.model.readEntity
  */
 const val COUNTRY_ENTITY = "country_entity"
 
-class CountryEntity(val map: MutableMap<String, Any>) {
+private const val FLD_NAME = "name"
+private const val FLD_CODE = "code"
+private const val FLD_GROUP = "country_group"
+private const val FLD_STATES = "states"
 
-    // Huge memory overhead +4 additional objects per EACH entity
-    var name: String by NamedMapDelegate(map)
-    var code: String by NamedMapDelegate(map)
-    var group: String by NamedMapDelegate(map, "country_group")
-    var states: String by NamedMapDelegate(map)
+class CountryEntity(
+        var name: String,
+        var code: String,
+        var group: String,
+        var states: String) {
 
-    constructor(): this(mutableMapOf())
+    constructor(): this("", "", "", "")
 
-    constructor(
-            name: String, code: String,
-            group: String, states: String): this(mutableMapOf()) {
-        this.name = name
-        this.code = code
-        this.group = group
-        this.states = states
-    }
+    constructor(cursor: Cursor): this(
+            cursor.getString(FLD_NAME),
+            cursor.getString(FLD_CODE),
+            cursor.getString(FLD_GROUP),
+            cursor.getString(FLD_STATES))
+}
+
+fun CountryEntity.toContentValues(): ContentValues {
+    val result = ContentValues()
+    result.put(FLD_NAME, name)
+    result.put(FLD_CODE, code)
+    result.put(FLD_GROUP, group)
+    result.put(FLD_STATES, states)
+    return result
 }
 
 class CountryReader: EntityReader<CountryEntity> {

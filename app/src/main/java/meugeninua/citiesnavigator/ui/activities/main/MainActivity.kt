@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import meugeninua.citiesnavigator.R
@@ -28,10 +27,10 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         FetchAllService.Launcher().launch(dispatcher)
         launch {
             delay(20, TimeUnit.SECONDS)
-            val cities = citiesDao.cities()
-            Timber.d("Found %d cities", cities.size)
-            val countries = citiesDao.countries()
-            Timber.d("Found %d countries", countries.size)
+//            val cities = citiesDao.cities()
+            Timber.d("Found %d cities", citiesDao.citiesCount())
+//            val countries = citiesDao.countries()
+            Timber.d("Found %d countries", citiesDao.countriesCount())
         }
     }
 
