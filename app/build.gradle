@@ -17,12 +17,24 @@ android {
 
         resValue 'string', 'com_google_android_geo_api_key', props.get('com_google_android_geo_api_key')
     }
+    signingConfigs {
+        config {
+            keyAlias props.get('signing_configs_config_key_alias')
+            keyPassword props.get('signing_configs_config_key_password')
+            storeFile file(props.get('signing_configs_config_store_file'))
+            storePassword props.get('signing_configs_config_store_password')
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.config
+
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -30,24 +42,19 @@ kotlin.experimental.coroutines 'enable'
 
 dependencies {
     implementation "${packages.kotlin}:kotlin-stdlib-jdk7:${versions.kotlin}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.4"
-    implementation "com.jakewharton.timber:timber:4.7.1"
-
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation "${packages.lifecycle}:extensions:${versions.lifecycle}"
-    implementation "org.koin:koin-android-architecture:0.9.3"
-
+    implementation 'org.koin:koin-android-architecture:0.9.3'
     implementation "${packages.okhttp}:okhttp:${versions.okhttp}"
     implementation "${packages.okhttp}:logging-interceptor:${versions.okhttp}"
-
     implementation "${packages.support}:appcompat-v7:${versions.support}"
     implementation "${packages.support}:recyclerview-v7:${versions.support}"
-
     implementation("${packages.play_services}:play-services-maps:${versions.play_services}") {
         exclude group: packages.support, module: 'support-v4'
     }
-    implementation "com.firebase:firebase-jobdispatcher:0.8.5"
-
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
