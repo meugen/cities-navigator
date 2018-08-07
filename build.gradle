@@ -6,13 +6,15 @@ buildscript {
             support: 'com.android.support',
             lifecycle: 'android.arch.lifecycle',
             okhttp: 'com.squareup.okhttp3',
-            play_services: 'com.google.android.gms']
+            play_services: 'com.google.android.gms',
+            paging: 'android.arch.paging']
     ext.versions = [
             kotlin: '1.2.60',
             support: '27.1.1',
             lifecycle: '1.1.1',
             okhttp: '3.11.0',
-            play_services: '15.0.1']
+            play_services: '15.0.1',
+            paging: '1.0.0']
     ext.props = new Properties()
     file("props.properties").withInputStream { props.load(it) }
     repositories {

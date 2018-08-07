@@ -54,6 +54,7 @@ dependencies {
     implementation("${packages.play_services}:play-services-maps:${versions.play_services}") {
         exclude group: packages.support, module: 'support-v4'
     }
+    implementation "${packages.paging}:runtime:${versions.paging}"
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

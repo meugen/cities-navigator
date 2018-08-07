@@ -11,6 +11,7 @@ import meugeninua.citiesnavigator.ui.activities.base.fragments.BindingFragment
 import meugeninua.citiesnavigator.ui.activities.base.resource.Resource
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesAdapter
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding.MainBinding
+import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainData
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainViewModel
 import meugeninua.citiesnavigator.ui.activities.map.MapActivity
 import org.koin.android.architecture.ext.viewModel
@@ -36,11 +37,11 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
         super.onActivityCreated(savedInstanceState)
         binding.setupRecycler(this)
 
-        model.liveData.observe(this, Observer { onCities(it) })
+        model.liveData.observe(this, Observer { onData(it) })
         model.loadCities()
     }
 
-    private fun onCities(resource: Resource<List<CityEntity>>?) {
+    private fun onData(resource: Resource<MainData>?) {
         resource?.let {
             if (it.isLoading) {
                 binding.displayProgressBar()

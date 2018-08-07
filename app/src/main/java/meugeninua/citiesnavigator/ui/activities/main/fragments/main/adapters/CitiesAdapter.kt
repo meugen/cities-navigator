@@ -24,6 +24,8 @@ class CitiesAdapter(
         notifyDataSetChanged()
     }
 
+    operator fun get(position: Int) = items[position]
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
         val view = inflater.inflate(R.layout.item_city, parent, false)
         return CityHolder(view, listener)

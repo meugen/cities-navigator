@@ -10,7 +10,7 @@ import java.util.regex.Pattern
  * @author meugen
  */
 private const val NAME = "cities_navigator"
-private const val VERSION = 1
+private const val VERSION = 2
 
 class AppDatabaseHelper(context: Context)
         : SQLiteOpenHelper(context, NAME, null, VERSION) {

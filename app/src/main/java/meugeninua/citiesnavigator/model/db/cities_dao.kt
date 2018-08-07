@@ -6,13 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.entities.CountryEntity
 import meugeninua.citiesnavigator.model.entities.toContentValues
+import java.util.*
 
 /**
  * @author meugen
  */
+private const val DEFAULT_PAGE_SIZE = 50
+private const val DEFAULT_PAGE_NUM = 0
+
 interface CitiesDao {
 
-    fun cities(): List<CityEntity>
+    fun cities(
+            pageNum: Int = DEFAULT_PAGE_NUM,
+            pageSize: Int = DEFAULT_PAGE_SIZE): List<CityEntity>
 
     fun insertCities(cities: List<CityEntity>)
 
@@ -29,8 +35,11 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
 
     private val db = helper.writableDatabase
 
-    override fun cities(): List<CityEntity> {
-        return db.select("SELECT * FROM cities") {
+    override fun cities(pageNum: Int, pageSize: Int): List<CityEntity> {
+        val sql = "SELECT * FROM cities ORDER BY country, name LIMIT ? OFFSET ?"
+        val params: List<String> = listOf(
+                "$pageSize", "${pageSize * pageNum}")
+        return db.select(sql, params) {
             val result = ArrayList<CityEntity>(it.count)
             while (it.moveToNext()) {
                 result.add(CityEntity(it))
@@ -104,11 +113,12 @@ private inline fun <T> SQLiteDatabase.inTransaction(action: SQLiteDatabase.() ->
 }
 
 private inline fun <T> SQLiteDatabase.select(
-        sql: String, params: Array<out String> = arrayOf(),
+        sql: String,
+        params: List<String> = Collections.emptyList(),
         action: (Cursor) -> T): T {
     var cursor: Cursor? = null
     try {
-        cursor = rawQuery(sql, params)
+        cursor = rawQuery(sql, params.toTypedArray())
         return action(cursor)
     } finally {
         cursor?.close()
