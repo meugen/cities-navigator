@@ -37,7 +37,7 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
         binding.setupRecycler(this)
 
         model.liveData.observe(this, Observer { onCities(it) })
-        model.loadCities(true)
+        model.loadCities()
     }
 
     private fun onCities(resource: Resource<List<CityEntity>>?) {

@@ -18,20 +18,12 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private val dispatcher: FirebaseJobDispatcher by inject()
-    private val citiesDao: CitiesDao by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         FetchAllService.Launcher().launch(dispatcher)
-        launch {
-            delay(20, TimeUnit.SECONDS)
-//            val cities = citiesDao.cities()
-            Timber.d("Found %d cities", citiesDao.citiesCount())
-//            val countries = citiesDao.countries()
-            Timber.d("Found %d countries", citiesDao.countriesCount())
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
