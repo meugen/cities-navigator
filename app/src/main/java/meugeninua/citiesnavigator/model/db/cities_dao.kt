@@ -37,10 +37,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
     override fun cities(filter: String, position: Int, loadSize: Int): List<CityEntity> {
         val params = mutableListOf<String>()
         val sql = StringBuilder("SELECT * FROM cities")
-        if (!TextUtils.isEmpty(filter)) {
-            sql.append(" WHERE name LIKE '%' || ? || '%'")
-            params.add(filter)
-        }
+        appendCitiesFilterWhere(filter, sql, params)
         sql.append(" ORDER BY country, name LIMIT ? OFFSET ?")
         params.addAll(listOf("$loadSize", "$position"))
         return db.select(sql.toString(), params) {
@@ -86,10 +83,7 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
     override fun citiesCount(filter: String): Int {
         val params = mutableListOf<String>()
         val sql = StringBuilder("SELECT count(id) c FROM cities")
-        if (!TextUtils.isEmpty(filter)) {
-            sql.append(" WHERE name LIKE '%' || ? || '%'")
-            params.add(filter)
-        }
+        appendCitiesFilterWhere(filter, sql, params)
         return db.select(sql.toString(), params) {
             var result = 0
             if (it.moveToFirst()) {
@@ -106,6 +100,17 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
                 result = it.getInt(0)
             }
             result
+        }
+    }
+
+    private fun appendCitiesFilterWhere(
+            filter: String,
+            sql: StringBuilder,
+            params: MutableList<String>) {
+        if (!TextUtils.isEmpty(filter)) {
+            sql.append(" WHERE name LIKE '%' || ? || '%' OR country IN (SELECT code FROM countries WHERE name LIKE '%' || ? || '%')")
+            params.add(filter)
+            params.add(filter)
         }
     }
 }
