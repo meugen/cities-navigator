@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.model.entities.CityEntity
+import meugeninua.citiesnavigator.model.entities.CountryEntity
 import meugeninua.citiesnavigator.ui.activities.base.fragments.BindingFragment
 import meugeninua.citiesnavigator.ui.activities.base.resource.Resource
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesAdapter
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding.MainBinding
-import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainData
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainViewModel
 import meugeninua.citiesnavigator.ui.activities.map.MapActivity
 import org.koin.android.architecture.ext.viewModel
@@ -41,7 +41,7 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
         model.loadCities()
     }
 
-    private fun onData(resource: Resource<MainData>?) {
+    private fun onData(resource: Resource<Map<String, CountryEntity>>?) {
         resource?.let {
             if (it.isLoading) {
                 binding.displayProgressBar()

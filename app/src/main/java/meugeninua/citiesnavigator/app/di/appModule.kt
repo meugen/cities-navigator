@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import meugeninua.citiesnavigator.BuildConfig
+import meugeninua.citiesnavigator.app.executors.MainThreadExecutor
 import meugeninua.citiesnavigator.model.EntityReader
 import meugeninua.citiesnavigator.model.db.AppDatabaseHelper
 import meugeninua.citiesnavigator.model.db.CitiesDao
@@ -17,11 +18,15 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 /**
  * @author meugen
  */
 const val APP_CONTEXT = "app_context"
+const val MAIN_EXECUTOR = "main_executor"
+const val IO_EXECUTOR = "io_executor"
 
 val appModule: Module = applicationContext {
     factory(APP_CONTEXT) { androidApplication() as Context }
@@ -34,6 +39,8 @@ val appModule: Module = applicationContext {
     bean { MainRepositoryImpl(get(CITY_ENTITY), get(COUNTRY_ENTITY), get()) as MainRepository }
 
     bean { CitiesDaoImpl(get()) as CitiesDao }
+    bean(MAIN_EXECUTOR) { MainThreadExecutor() as Executor }
+    bean(IO_EXECUTOR) { Executors.newCachedThreadPool() as Executor }
 }
 
 private fun buildOkHttp(): OkHttpClient {

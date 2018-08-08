@@ -1,7 +1,10 @@
 package meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding
 
+import android.arch.paging.DataSource
+import android.arch.paging.PagedList
 import android.content.Context
 import android.support.v4.widget.ContentLoadingProgressBar
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,10 +13,13 @@ import android.view.View
 import android.widget.TextView
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import meugeninua.citiesnavigator.R
+import meugeninua.citiesnavigator.model.db.DEFAULT_PAGE_SIZE
+import meugeninua.citiesnavigator.model.entities.CityEntity
+import meugeninua.citiesnavigator.model.entities.CountryEntity
 import meugeninua.citiesnavigator.ui.activities.base.binding.BaseBinding
 import meugeninua.citiesnavigator.ui.activities.base.binding.Binding
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesAdapter
-import meugeninua.citiesnavigator.ui.activities.main.fragments.main.vm.MainData
+import java.util.concurrent.Executor
 
 /**
  * @author meugen
@@ -22,19 +28,24 @@ interface MainBinding: Binding {
 
     fun setupRecycler(listener: CitiesAdapter.OnCitySelectedListener)
 
-    fun displayCities(data: MainData)
+    fun displayCities(countries: Map<String, CountryEntity>)
 
     fun displayProgressBar()
 
     fun displayError(error: Throwable)
 }
 
-class MainBindingImpl(private val context: Context): BaseBinding(), MainBinding {
+class MainBindingImpl(
+        private val context: Context,
+        private val source: DataSource<Int, CityEntity>,
+        private val callback: DiffUtil.ItemCallback<CityEntity>,
+        private val ioExecutor: Executor,
+        private val mainExecutor: Executor): BaseBinding(), MainBinding {
 
     private lateinit var adapter: CitiesAdapter
 
     override fun setupRecycler(listener: CitiesAdapter.OnCitySelectedListener) {
-        adapter = CitiesAdapter(LayoutInflater.from(context), listener)
+        adapter = CitiesAdapter(LayoutInflater.from(context), listener, callback)
 
         val recycler: RecyclerView = get(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(context)
@@ -44,10 +55,18 @@ class MainBindingImpl(private val context: Context): BaseBinding(), MainBinding 
         recycler.adapter = adapter
     }
 
-    override fun displayCities(data: MainData) {
+    override fun displayCities(countries: Map<String, CountryEntity>) {
         val progressBar: ContentLoadingProgressBar = get(R.id.progress_bar)
         progressBar.hide()
-        adapter.updateAdapter(data.cities, data.countries)
+        val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPageSize(DEFAULT_PAGE_SIZE)
+                .build()
+        val list = PagedList.Builder<Int, CityEntity>(source, config)
+                .setFetchExecutor(ioExecutor)
+                .setNotifyExecutor(mainExecutor)
+                .build()
+        adapter.updateAdapter(list, countries)
     }
 
     override fun displayProgressBar() {

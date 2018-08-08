@@ -11,14 +11,13 @@ import java.util.*
 /**
  * @author meugen
  */
-private const val DEFAULT_PAGE_SIZE = 50
-private const val DEFAULT_PAGE_NUM = 0
+const val DEFAULT_PAGE_SIZE = 50
 
 interface CitiesDao {
 
     fun cities(
-            pageNum: Int = DEFAULT_PAGE_NUM,
-            pageSize: Int = DEFAULT_PAGE_SIZE): List<CityEntity>
+            position: Int = 0,
+            loadSize: Int = DEFAULT_PAGE_SIZE): List<CityEntity>
 
     fun insertCities(cities: List<CityEntity>)
 
@@ -35,10 +34,10 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
 
     private val db = helper.writableDatabase
 
-    override fun cities(pageNum: Int, pageSize: Int): List<CityEntity> {
+    override fun cities(position: Int, loadSize: Int): List<CityEntity> {
         val sql = "SELECT * FROM cities ORDER BY country, name LIMIT ? OFFSET ?"
         val params: List<String> = listOf(
-                "$pageSize", "${pageSize * pageNum}")
+                "$loadSize", "$position")
         return db.select(sql, params) {
             val result = ArrayList<CityEntity>(it.count)
             while (it.moveToNext()) {

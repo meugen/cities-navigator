@@ -1,5 +1,8 @@
 package meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters
 
+import android.arch.paging.PagedList
+import android.arch.paging.PagedListAdapter
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,19 +19,18 @@ import java.util.*
  */
 class CitiesAdapter(
             private val inflater: LayoutInflater,
-            private val listener: OnCitySelectedListener)
-        : RecyclerView.Adapter<CitiesAdapter.CityHolder>(),
+            private val listener: OnCitySelectedListener,
+            callback: DiffUtil.ItemCallback<CityEntity>)
+        : PagedListAdapter<CityEntity, CitiesAdapter.CityHolder>(callback),
         StickyRecyclerHeadersAdapter<CitiesAdapter.CountryHolder> {
 
-    private var cities: List<CityEntity> = Collections.emptyList()
     private var countries: Map<String, CountryEntity> = Collections.emptyMap()
 
     fun updateAdapter(
-            cities: List<CityEntity>,
+            cities: PagedList<CityEntity>,
             countries: Map<String, CountryEntity>) {
-        this.cities = cities
         this.countries = countries
-        notifyDataSetChanged()
+        submitList(cities)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
@@ -36,16 +38,13 @@ class CitiesAdapter(
         return CityHolder(view, listener)
     }
 
-    override fun getItemCount(): Int {
-        return cities.size
-    }
-
     override fun onBindViewHolder(holder: CityHolder, position: Int) {
-        holder.bind(cities[position])
+        holder.bind(getItem(position)!!)
     }
 
     private fun getCountry(position: Int): CountryEntity? {
-        val code = cities[position].country
+        val code = getItem(position)?.country
+                ?: return null
         return countries[code]
     }
 

@@ -11,20 +11,23 @@ import meugeninua.citiesnavigator.model.readEntity
  */
 const val CITY_ENTITY = "city_entity"
 
+private const val FLD_ID = "id"
 private const val FLD_COUNTRY = "country"
 private const val FLD_NAME = "name"
 private const val FLD_LAT = "lat"
 private const val FLD_LNG = "lng"
 
-class CityEntity(
+data class CityEntity(
+        var id: Int,
         var country: String,
         var name: String,
         var lat: Double,
         var lng: Double) {
 
-    constructor(): this("", "", 0.0, 0.0)
+    constructor(): this(0, "", "", 0.0, 0.0)
 
     constructor(cursor: Cursor): this(
+            cursor.getInt(FLD_ID),
             cursor.getString(FLD_COUNTRY),
             cursor.getString(FLD_NAME),
             cursor.getDouble(FLD_LAT),
