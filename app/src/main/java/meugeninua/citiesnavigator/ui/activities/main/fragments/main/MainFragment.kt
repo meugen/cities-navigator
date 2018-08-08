@@ -54,7 +54,9 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
     }
 
     fun filterCities(text: CharSequence) {
-
+        val countries = model.liveData.value?.data
+                ?: return
+        binding.filterCities(text.toString(), countries)
     }
 
     override fun onCitySelected(entity: CityEntity) {

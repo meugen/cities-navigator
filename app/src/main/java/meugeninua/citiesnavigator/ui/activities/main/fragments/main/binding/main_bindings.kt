@@ -13,12 +13,14 @@ import android.view.View
 import android.widget.TextView
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import meugeninua.citiesnavigator.R
+import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.db.DEFAULT_PAGE_SIZE
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.entities.CountryEntity
 import meugeninua.citiesnavigator.ui.activities.base.binding.BaseBinding
 import meugeninua.citiesnavigator.ui.activities.base.binding.Binding
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesAdapter
+import meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters.CitiesSource
 import java.util.concurrent.Executor
 
 /**
@@ -30,6 +32,8 @@ interface MainBinding: Binding {
 
     fun displayCities(countries: Map<String, CountryEntity>)
 
+    fun filterCities(query: String, countries: Map<String, CountryEntity>)
+
     fun displayProgressBar()
 
     fun displayError(error: Throwable)
@@ -37,7 +41,7 @@ interface MainBinding: Binding {
 
 class MainBindingImpl(
         private val context: Context,
-        private val source: DataSource<Int, CityEntity>,
+        private val dao: CitiesDao,
         private val callback: DiffUtil.ItemCallback<CityEntity>,
         private val ioExecutor: Executor,
         private val mainExecutor: Executor): BaseBinding(), MainBinding {
@@ -56,13 +60,17 @@ class MainBindingImpl(
     }
 
     override fun displayCities(countries: Map<String, CountryEntity>) {
+        filterCities("", countries)
+    }
+
+    override fun filterCities(query: String, countries: Map<String, CountryEntity>) {
         val progressBar: ContentLoadingProgressBar = get(R.id.progress_bar)
         progressBar.hide()
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(DEFAULT_PAGE_SIZE)
                 .build()
-        val list = PagedList.Builder<Int, CityEntity>(source, config)
+        val list = PagedList.Builder<Int, CityEntity>(CitiesSource(dao, query), config)
                 .setFetchExecutor(ioExecutor)
                 .setNotifyExecutor(mainExecutor)
                 .build()

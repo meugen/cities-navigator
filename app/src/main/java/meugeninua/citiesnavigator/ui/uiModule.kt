@@ -23,7 +23,7 @@ val uiModule = applicationContext {
     factory { BindingImpl() as Binding }
     factory { MainBindingImpl(
             context = get(APP_CONTEXT),
-            source = get(CITY_ENTITY),
+            dao = get(),
             callback = get(CITY_ENTITY),
             ioExecutor = get(IO_EXECUTOR),
             mainExecutor = get(MAIN_EXECUTOR)) as MainBinding }

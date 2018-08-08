@@ -3,6 +3,7 @@ package meugeninua.citiesnavigator.model.db
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.text.TextUtils
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.entities.CountryEntity
 import meugeninua.citiesnavigator.model.entities.toContentValues
@@ -15,13 +16,12 @@ const val DEFAULT_PAGE_SIZE = 50
 
 interface CitiesDao {
 
-    fun cities(
-            position: Int = 0,
-            loadSize: Int = DEFAULT_PAGE_SIZE): List<CityEntity>
+    fun cities(filter: String, position: Int,
+               loadSize: Int): List<CityEntity>
 
     fun insertCities(cities: List<CityEntity>)
 
-    fun citiesCount(): Int
+    fun citiesCount(filter: String = ""): Int
 
     fun countries(): List<CountryEntity>
 
@@ -34,11 +34,16 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
 
     private val db = helper.writableDatabase
 
-    override fun cities(position: Int, loadSize: Int): List<CityEntity> {
-        val sql = "SELECT * FROM cities ORDER BY country, name LIMIT ? OFFSET ?"
-        val params: List<String> = listOf(
-                "$loadSize", "$position")
-        return db.select(sql, params) {
+    override fun cities(filter: String, position: Int, loadSize: Int): List<CityEntity> {
+        val params = mutableListOf<String>()
+        val sql = StringBuilder("SELECT * FROM cities")
+        if (!TextUtils.isEmpty(filter)) {
+            sql.append(" WHERE name LIKE '%' || ? || '%'")
+            params.add(filter)
+        }
+        sql.append(" ORDER BY country, name LIMIT ? OFFSET ?")
+        params.addAll(listOf("$loadSize", "$position"))
+        return db.select(sql.toString(), params) {
             val result = ArrayList<CityEntity>(it.count)
             while (it.moveToNext()) {
                 result.add(CityEntity(it))
@@ -78,8 +83,14 @@ class CitiesDaoImpl(helper: SQLiteOpenHelper): CitiesDao {
         }
     }
 
-    override fun citiesCount(): Int {
-        return db.select("SELECT count(id) c FROM cities") {
+    override fun citiesCount(filter: String): Int {
+        val params = mutableListOf<String>()
+        val sql = StringBuilder("SELECT count(id) c FROM cities")
+        if (!TextUtils.isEmpty(filter)) {
+            sql.append(" WHERE name LIKE '%' || ? || '%'")
+            params.add(filter)
+        }
+        return db.select(sql.toString(), params) {
             var result = 0
             if (it.moveToFirst()) {
                 result = it.getInt(0)
