@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.model.entities.CityEntity
+import meugeninua.citiesnavigator.model.entities.CountryEntity
 import java.util.*
 
 /**
@@ -15,16 +17,19 @@ import java.util.*
 class CitiesAdapter(
             private val inflater: LayoutInflater,
             private val listener: OnCitySelectedListener)
-        : RecyclerView.Adapter<CitiesAdapter.CityHolder>() {
+        : RecyclerView.Adapter<CitiesAdapter.CityHolder>(),
+        StickyRecyclerHeadersAdapter<CitiesAdapter.CountryHolder> {
 
-    private var items: List<CityEntity> = Collections.emptyList()
+    private var cities: List<CityEntity> = Collections.emptyList()
+    private var countries: Map<String, CountryEntity> = Collections.emptyMap()
 
-    fun swapItems(newItems: List<CityEntity>) {
-        this.items = newItems
+    fun updateAdapter(
+            cities: List<CityEntity>,
+            countries: Map<String, CountryEntity>) {
+        this.cities = cities
+        this.countries = countries
         notifyDataSetChanged()
     }
-
-    operator fun get(position: Int) = items[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
         val view = inflater.inflate(R.layout.item_city, parent, false)
@@ -32,11 +37,33 @@ class CitiesAdapter(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return cities.size
     }
 
     override fun onBindViewHolder(holder: CityHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(cities[position])
+    }
+
+    private fun getCountry(position: Int): CountryEntity? {
+        val code = cities[position].country
+        return countries[code]
+    }
+
+    override fun getHeaderId(position: Int): Long {
+        val country = getCountry(position)
+                ?: return -1L
+        return country.id.toLong()
+    }
+
+    override fun onCreateHeaderViewHolder(parent: ViewGroup): CountryHolder {
+        val view = inflater.inflate(R.layout.item_country, parent, false)
+        return CountryHolder(view)
+    }
+
+    override fun onBindHeaderViewHolder(holder: CountryHolder, position: Int) {
+        val country = getCountry(position)
+                ?: return
+        holder.bind(country)
     }
 
     class CityHolder(view: View, private val l: OnCitySelectedListener)
@@ -60,6 +87,15 @@ class CitiesAdapter(
             when (viewId) {
                 R.id.name -> l.onCitySelected(entity)
             }
+        }
+    }
+
+    class CountryHolder(view: View): RecyclerView.ViewHolder(view) {
+
+        private val countryView: TextView = view.findViewById(R.id.country)
+
+        fun bind(entity: CountryEntity) {
+            countryView.text = entity.name
         }
     }
 

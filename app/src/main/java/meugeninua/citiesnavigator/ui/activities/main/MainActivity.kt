@@ -5,15 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import meugeninua.citiesnavigator.R
 import meugeninua.citiesnavigator.app.services.FetchAllService
-import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.MainFragment
 import org.koin.android.ext.android.inject
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 

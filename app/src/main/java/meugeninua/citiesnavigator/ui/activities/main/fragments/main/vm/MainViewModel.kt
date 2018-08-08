@@ -6,7 +6,6 @@ import kotlinx.coroutines.experimental.launch
 import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.entities.CityEntity
 import meugeninua.citiesnavigator.model.entities.CountryEntity
-import meugeninua.citiesnavigator.model.repositories.MainRepository
 import meugeninua.citiesnavigator.ui.activities.base.resource.Resource
 import meugeninua.citiesnavigator.ui.activities.base.resource.toNullableData
 import timber.log.Timber

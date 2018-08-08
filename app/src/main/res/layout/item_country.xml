@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeightSmall"
     xmlns:tools="http://schemas.android.com/tools"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center"
-    android:id="@+id/header"
+    android:id="@+id/country"
     android:background="@color/green_100"
     android:textStyle="bold"
     tools:text="Ukraine" />
