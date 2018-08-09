@@ -13,7 +13,10 @@
         android:theme="@style/AppTheme"
         android:name=".app.CitiesApp">
 
-        <activity android:name=".ui.activities.main.MainActivity">
+        <activity
+            android:name=".ui.activities.main.MainActivity"
+            android:launchMode="singleTop">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

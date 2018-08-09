@@ -17,13 +17,13 @@ class MainViewModel(
 
     val liveData: MutableLiveData<Resource<Map<String, CountryEntity>>> = MutableLiveData()
 
-    fun loadCities(reload: Boolean = false) {
+    fun loadCountries(reload: Boolean = false) {
         if (reload || liveData.value == null) {
-            internalLoadCities()
+            internalLoadCountries()
         }
     }
 
-    private fun internalLoadCities() = launch {
+    private fun internalLoadCountries() = launch {
         liveData.postValue(Resource.loading(liveData.value.toNullableData()))
         try {
             val countries = dao.countries()

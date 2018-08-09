@@ -30,9 +30,9 @@ interface MainBinding: Binding {
 
     fun setupRecycler(listener: CitiesAdapter.OnCitySelectedListener)
 
-    fun displayCities(countries: Map<String, CountryEntity>)
+    fun displayCities(query: String = "")
 
-    fun filterCities(query: String, countries: Map<String, CountryEntity>)
+    fun attachCountries(countries: Map<String, CountryEntity>)
 
     fun displayProgressBar()
 
@@ -59,11 +59,7 @@ class MainBindingImpl(
         recycler.adapter = adapter
     }
 
-    override fun displayCities(countries: Map<String, CountryEntity>) {
-        filterCities("", countries)
-    }
-
-    override fun filterCities(query: String, countries: Map<String, CountryEntity>) {
+    override fun displayCities(query: String) {
         val progressBar: ContentLoadingProgressBar = get(R.id.progress_bar)
         progressBar.hide()
         val config = PagedList.Config.Builder()
@@ -74,7 +70,11 @@ class MainBindingImpl(
                 .setFetchExecutor(ioExecutor)
                 .setNotifyExecutor(mainExecutor)
                 .build()
-        adapter.updateAdapter(list, countries)
+        adapter.submitList(list)
+    }
+
+    override fun attachCountries(countries: Map<String, CountryEntity>) {
+        adapter.attachCountries(countries);
     }
 
     override fun displayProgressBar() {

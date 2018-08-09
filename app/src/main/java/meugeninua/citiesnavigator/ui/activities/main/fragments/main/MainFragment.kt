@@ -36,9 +36,10 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.setupRecycler(this)
+        binding.displayCities()
 
         model.liveData.observe(this, Observer { onData(it) })
-        model.loadCities()
+        model.loadCountries()
     }
 
     private fun onData(resource: Resource<Map<String, CountryEntity>>?) {
@@ -46,7 +47,7 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
             if (it.isLoading) {
                 binding.displayProgressBar()
             } else try {
-                binding.displayCities(it.data)
+                binding.attachCountries(it.data)
             } catch (e: Throwable) {
                 binding.displayError(e)
             }
@@ -54,9 +55,7 @@ class MainFragment: BindingFragment<MainBinding>(), CitiesAdapter.OnCitySelected
     }
 
     fun filterCities(text: CharSequence) {
-        val countries = model.liveData.value?.data
-                ?: return
-        binding.filterCities(text.toString(), countries)
+        binding.displayCities(text.toString())
     }
 
     override fun onCitySelected(entity: CityEntity) {

@@ -26,11 +26,9 @@ class CitiesAdapter(
 
     private var countries: Map<String, CountryEntity> = Collections.emptyMap()
 
-    fun updateAdapter(
-            cities: PagedList<CityEntity>,
-            countries: Map<String, CountryEntity>) {
+    fun attachCountries(countries: Map<String, CountryEntity>) {
         this.countries = countries
-        submitList(cities)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
