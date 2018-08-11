@@ -14,6 +14,7 @@ import timber.log.Timber
  */
 class CitiesApp: Application() {
 
+    // ffd
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
