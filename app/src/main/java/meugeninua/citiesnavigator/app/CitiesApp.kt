@@ -14,6 +14,8 @@ import timber.log.Timber
  */
 class CitiesApp: Application() {
 
+    // Sample changes
+
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
