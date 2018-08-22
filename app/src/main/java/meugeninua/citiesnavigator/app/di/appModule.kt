@@ -36,11 +36,11 @@ class AppModuleImpl(private val app: CitiesApp): AppModule {
     private val httpClient: OkHttpClient
         get() = buildOkHttp()
 
-    override val citiesDao: CitiesDao by lazy { CitiesDaoImpl(openHelper) }
-    override val mainExecutor: Executor by lazy { MainThreadExecutor() }
-    override val ioExecutor: Executor by lazy { Executors.newCachedThreadPool() }
-    override val mainRepository: MainRepository by lazy { MainRepositoryImpl(cityReader, countryReader, httpClient) }
-    override val dispatcher: FirebaseJobDispatcher by lazy { buildDispatcher(app) }
+    override val citiesDao: CitiesDao by lazy(LazyThreadSafetyMode.NONE) { CitiesDaoImpl(openHelper) }
+    override val mainExecutor: Executor by lazy(LazyThreadSafetyMode.NONE) { MainThreadExecutor() }
+    override val ioExecutor: Executor by lazy(LazyThreadSafetyMode.NONE) { Executors.newCachedThreadPool() }
+    override val mainRepository: MainRepository by lazy(LazyThreadSafetyMode.NONE) { MainRepositoryImpl(cityReader, countryReader, httpClient) }
+    override val dispatcher: FirebaseJobDispatcher by lazy(LazyThreadSafetyMode.NONE) { buildDispatcher(app) }
 }
 
 interface AppModule {
