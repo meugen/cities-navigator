@@ -36,7 +36,6 @@ class CountryEntity(
 
 fun CountryEntity.toContentValues(): ContentValues {
     val result = ContentValues()
-    result.put(FLD_ID, id)
     result.put(FLD_NAME, name)
     result.put(FLD_CODE, code)
     result.put(FLD_GROUP, group)
