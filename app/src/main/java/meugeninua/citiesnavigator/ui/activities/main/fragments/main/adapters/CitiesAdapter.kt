@@ -1,6 +1,5 @@
 package meugeninua.citiesnavigator.ui.activities.main.fragments.main.adapters
 
-import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView

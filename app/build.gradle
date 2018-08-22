@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 
     implementation "${packages.lifecycle}:extensions:${versions.lifecycle}"
-    implementation 'org.koin:koin-android-architecture:0.9.3'
+    implementation project(':kapsule-core')
 
     implementation "${packages.okhttp}:okhttp:${versions.okhttp}"
     implementation "${packages.okhttp}:logging-interceptor:${versions.okhttp}"

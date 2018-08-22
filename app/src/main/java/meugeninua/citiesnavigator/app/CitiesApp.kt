@@ -1,12 +1,12 @@
 package meugeninua.citiesnavigator.app
 
 import android.app.Application
+import android.content.Context
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import meugeninua.citiesnavigator.BuildConfig
-import meugeninua.citiesnavigator.app.di.appModule
-import meugeninua.citiesnavigator.ui.uiModule
-import org.koin.android.ext.android.startKoin
+import meugeninua.citiesnavigator.app.di.AppModule
+import meugeninua.citiesnavigator.app.di.AppModuleImpl
 import timber.log.Timber
 
 /**
@@ -14,13 +14,17 @@ import timber.log.Timber
  */
 class CitiesApp: Application() {
 
-    // ffd
+    lateinit var module: AppModule
+
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
         Fabric.with(this, Crashlytics())
-        startKoin(this, listOf(appModule, uiModule))
+        module = AppModuleImpl(this)
     }
 }
+
+val Context.citiesApp
+        get() = applicationContext as CitiesApp

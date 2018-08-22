@@ -1,6 +1,5 @@
 package meugeninua.citiesnavigator.ui.activities.main.fragments.main.binding
 
-import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import android.content.Context
 import android.support.v4.widget.ContentLoadingProgressBar

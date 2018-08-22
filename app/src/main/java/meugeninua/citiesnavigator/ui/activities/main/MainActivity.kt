@@ -9,19 +9,24 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import meugeninua.citiesnavigator.R
+import meugeninua.citiesnavigator.app.citiesApp
+import meugeninua.citiesnavigator.app.di.AppModule
 import meugeninua.citiesnavigator.app.services.FetchAllService
 import meugeninua.citiesnavigator.ui.activities.main.fragments.main.MainFragment
-import org.koin.android.ext.android.inject
+import space.traversal.kapsule.Injects
+import space.traversal.kapsule.inject
+import space.traversal.kapsule.required
 import java.lang.ref.WeakReference
 
 private const val WHAT_PROCESS_QUERY = 1
 
-class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+class MainActivity: AppCompatActivity(), SearchView.OnQueryTextListener, Injects<MainActivityModule> {
 
-    private val dispatcher: FirebaseJobDispatcher by inject()
+    private val dispatcher: FirebaseJobDispatcher by required { dispatcher }
     private val handler by lazy { HandlerImpl(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject(MainActivityModule(citiesApp.module))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -72,3 +77,5 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 }
+
+class MainActivityModule(parent: AppModule): AppModule by parent

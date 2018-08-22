@@ -5,42 +5,51 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import meugeninua.citiesnavigator.BuildConfig
+import meugeninua.citiesnavigator.app.CitiesApp
 import meugeninua.citiesnavigator.app.executors.MainThreadExecutor
 import meugeninua.citiesnavigator.model.EntityReader
 import meugeninua.citiesnavigator.model.db.AppDatabaseHelper
 import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.db.CitiesDaoImpl
-import meugeninua.citiesnavigator.model.entities.*
+import meugeninua.citiesnavigator.model.entities.CityEntity
+import meugeninua.citiesnavigator.model.entities.CityReader
+import meugeninua.citiesnavigator.model.entities.CountryEntity
+import meugeninua.citiesnavigator.model.entities.CountryReader
 import meugeninua.citiesnavigator.model.repositories.MainRepository
 import meugeninua.citiesnavigator.model.repositories.MainRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**
  * @author meugen
  */
-const val APP_CONTEXT = "app_context"
-const val MAIN_EXECUTOR = "main_executor"
-const val IO_EXECUTOR = "io_executor"
+class AppModuleImpl(private val app: CitiesApp): AppModule {
 
-val appModule: Module = applicationContext {
-    factory(APP_CONTEXT) { androidApplication() as Context }
-    factory { buildOkHttp() }
-    factory { AppDatabaseHelper(get(APP_CONTEXT)) as SQLiteOpenHelper }
-    bean { buildDispatcher(get(APP_CONTEXT)) }
+    private val openHelper: SQLiteOpenHelper
+        get() = AppDatabaseHelper(app)
+    private val cityReader: EntityReader<CityEntity>
+        get() = CityReader()
+    private val countryReader: EntityReader<CountryEntity>
+        get() = CountryReader()
+    private val httpClient: OkHttpClient
+        get() = buildOkHttp()
 
-    factory(CITY_ENTITY) { CityReader() as EntityReader<CityEntity> }
-    factory(COUNTRY_ENTITY) { CountryReader() as EntityReader<CountryEntity> }
-    bean { MainRepositoryImpl(get(CITY_ENTITY), get(COUNTRY_ENTITY), get()) as MainRepository }
+    override val citiesDao: CitiesDao by lazy { CitiesDaoImpl(openHelper) }
+    override val mainExecutor: Executor by lazy { MainThreadExecutor() }
+    override val ioExecutor: Executor by lazy { Executors.newCachedThreadPool() }
+    override val mainRepository: MainRepository by lazy { MainRepositoryImpl(cityReader, countryReader, httpClient) }
+    override val dispatcher: FirebaseJobDispatcher by lazy { buildDispatcher(app) }
+}
 
-    bean { CitiesDaoImpl(get()) as CitiesDao }
-    bean(MAIN_EXECUTOR) { MainThreadExecutor() as Executor }
-    bean(IO_EXECUTOR) { Executors.newCachedThreadPool() as Executor }
+interface AppModule {
+
+    val citiesDao: CitiesDao
+    val mainExecutor: Executor
+    val ioExecutor: Executor
+    val mainRepository: MainRepository
+    val dispatcher: FirebaseJobDispatcher
 }
 
 private fun buildOkHttp(): OkHttpClient {

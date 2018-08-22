@@ -5,20 +5,29 @@ import com.firebase.jobdispatcher.*
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
+import meugeninua.citiesnavigator.app.citiesApp
+import meugeninua.citiesnavigator.app.di.AppModule
 import meugeninua.citiesnavigator.model.db.CitiesDao
 import meugeninua.citiesnavigator.model.repositories.MainRepository
-import org.koin.android.ext.android.inject
+import space.traversal.kapsule.Injects
+import space.traversal.kapsule.inject
+import space.traversal.kapsule.required
 import timber.log.Timber
 
 /**
  * @author meugen
  */
-class FetchAllService: JobService() {
+class FetchAllService: JobService(), Injects<AppModule> {
 
-    private val repository: MainRepository by inject()
-    private val citiesDao: CitiesDao by inject()
+    private val repository: MainRepository by required { mainRepository }
+    private val citiesDao: CitiesDao by required { citiesDao }
 
     private val jobs = mutableMapOf<String, Deferred<*>>()
+
+    override fun onCreate() {
+        inject(citiesApp.module)
+        super.onCreate()
+    }
 
     override fun onStopJob(job: JobParameters?): Boolean {
         val tag = job?.tag ?: return false
