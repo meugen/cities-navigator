@@ -1,0 +1,11 @@
+apply plugin: 'kotlin'
+
+//group project['publish.groupId']
+//version project['publish.version']
+
+dependencies {
+    implementation "${packages.kotlin}:kotlin-stdlib:${versions.kotlin}"
+
+    testImplementation "${packages.junit}:junit:${versions.junit}"
+    testImplementation "${packages.mockito}:mockito-core:${versions.mockito}"
+}

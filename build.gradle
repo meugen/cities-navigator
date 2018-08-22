@@ -7,14 +7,18 @@ buildscript {
             lifecycle: 'android.arch.lifecycle',
             okhttp: 'com.squareup.okhttp3',
             play_services: 'com.google.android.gms',
-            paging: 'android.arch.paging']
+            paging: 'android.arch.paging',
+            junit: 'junit',
+            mockito: 'org.mockito']
     ext.versions = [
             kotlin: '1.2.60',
             support: '27.1.1',
             lifecycle: '1.1.1',
             okhttp: '3.11.0',
             play_services: '15.0.1',
-            paging: '1.0.0']
+            paging: '1.0.0',
+            junit: '4.12',
+            mockito: '2.21.0']
     ext.props = new Properties()
     file("props.properties").withInputStream { props.load(it) }
     repositories {
